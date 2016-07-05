@@ -3,12 +3,17 @@
 	Plugin Name: SN MobilPay - WooCommerce Gateway
 	Plugin URI: http://songnguyen.com.vn/
 	Description: Extends WooCommerce by Adding the MobilPay Gateway.
-	Version: 1.0
+	Version: 1.1
 	Author: SN Thuynguyen
-	Author URI: http://songnguyen.com.vn/	
-	License: GPLv2 or later	
+	Author URI: http://songnguyen.com.vn/
+	License: GPLv2 or later
+	Text Domain: sn-wc-mobilpay
 	*/
 
+	function mobilpay_plugin_load_plugin_textdomain() {
+	    load_plugin_textdomain( 'sn-wc-mobilpay', FALSE, basename( dirname( __FILE__ ) ) . '/languages/' );
+	}
+	add_action( 'plugins_loaded', 'mobilpay_plugin_load_plugin_textdomain' );
 
 // Include our Gateway Class and register Payment Gateway with WooCommerce
 add_action( 'plugins_loaded', 'sn_wc_mobilpay_init', 0 );
@@ -18,7 +23,7 @@ function sn_wc_mobilpay_init() {
 	// so do nothing
 	if ( ! class_exists( 'WC_Payment_Gateway' ) ) return;
 	DEFINE ('SN_PLUGIN_DIR', plugins_url( basename( plugin_dir_path( __FILE__ ) ), basename( __FILE__ ) ) . '/' );
-	
+
 	// If we made it this far, then include our Gateway Class
 	include_once( 'wc-mobilpay-gateway.php' );
 
@@ -39,7 +44,7 @@ function spyr_authorizenet_aim_action_links( $links ) {
 	);
 
 	// Merge our new link with the default ones
-	return array_merge( $plugin_links, $links );	
+	return array_merge( $plugin_links, $links );
 }*/
 //[snwcstatus]
 function snwcstatus_func( $atts ){
@@ -51,10 +56,10 @@ function snwcstatus_func( $atts ){
 		if(in_array($order_status,array('cancelled', 'failed' ))) $message .= '<p>'.__('Plata a fost respinsa, te rugam sa reincerci.', 'sn-wc-mobilpay').'</p>';
 		else{
 			$message .= '<p>'.__('Plata a fost finalizata cu succes.', 'sn-wc-mobilpay')."</p>";
-			$message .= '<p>'.__('ID comanda', 'sn-wc-mobilpay').': '.$order_id."</p>";		
+			$message .= '<p>'.__('ID comanda', 'sn-wc-mobilpay').': '.$order_id."</p>";
 			$message .= '<p>Stare comanda: <strong>'.wc_get_order_status_name($order_status).'</strong></p>';
-		} 			
-		
+		}
+
 		return $message;
 	}
 	return '';
